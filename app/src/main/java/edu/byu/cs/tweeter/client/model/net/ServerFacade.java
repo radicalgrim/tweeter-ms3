@@ -14,6 +14,19 @@ import edu.byu.cs.tweeter.model.service.response.LoginResponse;
  */
 public class ServerFacade {
 
+    private static ServerFacade instance;
+    public static ServerFacade getInstance(){
+        if(instance == null){
+            instance = new ServerFacade();
+        }
+        return instance;
+    }
+    public static void setInstance(ServerFacade instance) {
+        ServerFacade.instance = instance;
+    }
+    public ServerFacade() {}
+
+
     // TODO: Set this to the invoke URL of your API. Find it by going to your API in AWS, clicking
     //  on stages in the right-side menu, and clicking on the stage you deployed your API to.
     private static final String SERVER_URL = "Insert your API invoke URL here";

@@ -22,8 +22,8 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
      * completes.
      */
     public interface Observer {
-        void loginSuccessful(LoginResponse loginResponse);
-        void loginUnsuccessful(LoginResponse loginResponse);
+        void loginSuccessful(LoginResponse loginResponseSampleCode);
+        void loginUnsuccessful(LoginResponse loginResponseSampleCode);
         void handleException(Exception ex);
     }
 
@@ -84,16 +84,16 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
      * Notifies the observer (on the thread of the invoker of the
      * {@link #execute(LoginRequest...)} method) when the task completes.
      *
-     * @param loginResponse the response that was received by the task.
+     * @param loginResponseSampleCode the response that was received by the task.
      */
     @Override
-    protected void onPostExecute(LoginResponse loginResponse) {
+    protected void onPostExecute(LoginResponse loginResponseSampleCode) {
         if(exception != null) {
             observer.handleException(exception);
-        } else if(loginResponse.isSuccess()) {
-            observer.loginSuccessful(loginResponse);
+        } else if(loginResponseSampleCode.isSuccess()) {
+            observer.loginSuccessful(loginResponseSampleCode);
         } else {
-            observer.loginUnsuccessful(loginResponse);
+            observer.loginUnsuccessful(loginResponseSampleCode);
         }
     }
 }

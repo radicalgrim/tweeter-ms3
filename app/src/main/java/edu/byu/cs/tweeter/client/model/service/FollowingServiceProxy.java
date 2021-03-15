@@ -43,7 +43,7 @@ public class FollowingServiceProxy implements FollowingService {
      * @param response the response from the followee request.
      */
     private void loadImages(FollowingResponse response) throws IOException {
-        for(User user : response.getFollowees()) {
+        for(User user : response.getUsers()) {
             byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
             user.setImageBytes(bytes);
         }

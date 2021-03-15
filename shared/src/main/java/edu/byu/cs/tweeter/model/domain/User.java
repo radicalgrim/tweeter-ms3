@@ -8,19 +8,18 @@ import java.util.Objects;
  */
 public class User implements Comparable<User>, Serializable {
 
-    private String firstName;
-    private String lastName;
-    private String alias;
-    private String imageUrl;
+    private final String firstName;
+    private final String lastName;
+    private final String alias;
+    private final String imageUrl;
     private byte [] imageBytes;
-
-    /**
-     * Allows construction of the object from Json. Private so it won't be called by other code.
-     */
-    private User() {}
+    private int followerCount;
+    private int followingCount;
 
     public User(String firstName, String lastName, String imageURL) {
         this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
+        followerCount = 0;
+        followingCount = 0;
     }
 
     public User(String firstName, String lastName, String alias, String imageURL) {
@@ -28,22 +27,16 @@ public class User implements Comparable<User>, Serializable {
         this.lastName = lastName;
         this.alias = alias;
         this.imageUrl = imageURL;
+        followerCount = 0;
+        followingCount = 0;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getName() {
@@ -54,16 +47,8 @@ public class User implements Comparable<User>, Serializable {
         return alias;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public byte [] getImageBytes() {
@@ -73,6 +58,39 @@ public class User implements Comparable<User>, Serializable {
     public void setImageBytes(byte[] imageBytes) {
         this.imageBytes = imageBytes;
     }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(int followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public void incrementFollowerCount() {
+        followerCount++;
+    }
+
+    public void decrementFollowerCount() {
+        followerCount--;
+    }
+
+    public void incrementFollowingCount() {
+        followingCount++;
+    }
+
+    public void decrementFollowingCount() {
+        followingCount--;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -101,4 +119,6 @@ public class User implements Comparable<User>, Serializable {
     public int compareTo(User user) {
         return this.getAlias().compareTo(user.getAlias());
     }
+
+
 }

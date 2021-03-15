@@ -18,14 +18,13 @@ public class LoginServiceProxy implements LoginService {
     private static final String URL_PATH = "/login";
 
     public LoginResponse login(LoginRequest request) throws IOException, TweeterRemoteException {
-        ServerFacade serverFacade = getServerFacade();
-        LoginResponse loginResponse = serverFacade.login(request, URL_PATH);
+        LoginResponse response = getServerFacade().login(request, URL_PATH);
 
-        if(loginResponse.isSuccess()) {
-            loadImage(loginResponse.getUser());
+        if(response.isSuccess()) {
+            loadImage(response.getUser());
         }
 
-        return loginResponse;
+        return response;
     }
 
     /**

@@ -40,8 +40,7 @@ public class FollowingPresenter {
      * @return the followees.
      */
     public FollowingResponse getFollowing(FollowingRequest request) throws IOException, TweeterRemoteException {
-        FollowingService followingService = getFollowingService();
-        return followingService.getFollowees(request);
+        return getFollowingService().getFollowees(request);
     }
 
     /**

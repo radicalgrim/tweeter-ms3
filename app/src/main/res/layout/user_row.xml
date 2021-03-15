@@ -4,13 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".client.view.main.following.FollowingFragment">
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="10dp"
+    tools:context=".client.view.main.follows.FollowingFragment">
 
     <ImageView
         android:id="@+id/userImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
         android:contentDescription="@string/userImageContentDescription" />
 
     <LinearLayout

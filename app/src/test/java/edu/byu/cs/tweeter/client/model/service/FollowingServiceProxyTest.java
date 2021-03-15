@@ -79,7 +79,7 @@ public class FollowingServiceProxyTest {
     public void testGetFollowees_validRequest_loadsProfileImages() throws IOException, TweeterRemoteException {
         FollowingResponse response = followingServiceProxySpy.getFollowees(validRequest);
 
-        for(User user : response.getFollowees()) {
+        for(User user : response.getUsers()) {
             Assertions.assertNotNull(user.getImageBytes());
         }
     }
