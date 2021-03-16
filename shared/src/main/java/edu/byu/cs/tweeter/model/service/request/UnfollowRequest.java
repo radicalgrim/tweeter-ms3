@@ -3,11 +3,14 @@ package edu.byu.cs.tweeter.model.service.request;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class UnfollowRequest {
-    private final User user;
 
+    private User user;
 
     public UnfollowRequest(User user) {
         this.user = user;
+    }
+
+    public UnfollowRequest() {
     }
 
     /**
@@ -17,5 +20,9 @@ public class UnfollowRequest {
      */
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

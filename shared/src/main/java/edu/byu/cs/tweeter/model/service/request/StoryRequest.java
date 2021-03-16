@@ -6,9 +6,9 @@ package edu.byu.cs.tweeter.model.service.request;
  */
 public class StoryRequest {
 
-    private final String userAlias;
-    private final int limit;
-    private final String lastTimestamp;
+    private String userAlias;
+    private int limit;
+    private String lastTimestamp;
 
     /**
      * Creates an instance.
@@ -23,6 +23,9 @@ public class StoryRequest {
         this.userAlias = userAlias;
         this.limit = limit;
         this.lastTimestamp = lastTimestamp;
+    }
+
+    public StoryRequest() {
     }
 
     /**
@@ -53,4 +56,15 @@ public class StoryRequest {
         return lastTimestamp;
     }
 
+    public void setUserAlias(String userAlias) {
+        this.userAlias = userAlias;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public void setLastTimestamp(String lastTimestamp) {
+        this.lastTimestamp = lastTimestamp;
+    }
 }

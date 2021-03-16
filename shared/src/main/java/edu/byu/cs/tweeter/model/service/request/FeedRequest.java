@@ -2,9 +2,12 @@ package edu.byu.cs.tweeter.model.service.request;
 
 public class FeedRequest {
 
-    private final String userAlias;
-    private final int limit;
-    private final String lastTimestamp;
+    private String userAlias;
+    private int limit;
+    private String lastTimestamp;
+
+    public FeedRequest() {
+    }
 
     public FeedRequest(String userAlias, int limit, String lastTimestamp) {
         this.userAlias = userAlias;
@@ -24,4 +27,15 @@ public class FeedRequest {
         return lastTimestamp;
     }
 
+    public void setUserAlias(String userAlias) {
+        this.userAlias = userAlias;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public void setLastTimestamp(String lastTimestamp) {
+        this.lastTimestamp = lastTimestamp;
+    }
 }
