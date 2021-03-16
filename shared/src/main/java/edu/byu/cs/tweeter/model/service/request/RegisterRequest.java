@@ -1,11 +1,11 @@
 package edu.byu.cs.tweeter.model.service.request;
 
 public class RegisterRequest {
-    private final String firstName;
-    private final String lastName;
-    private final String username;
-    private final String password;
-    private final String imageUrl;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String password;
+    private String imageUrl;
 
     /**
      * Creates an instance.
@@ -19,6 +19,9 @@ public class RegisterRequest {
         this.username = username;
         this.password = password;
         this.imageUrl = imageUrl;
+    }
+
+    public RegisterRequest() {
     }
 
     /**
@@ -46,4 +49,23 @@ public class RegisterRequest {
     }
     public String getImageUrl() { return  imageUrl; }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
