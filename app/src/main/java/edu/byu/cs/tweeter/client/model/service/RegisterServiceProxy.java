@@ -7,20 +7,17 @@ import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.RegisterService;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 
 public class RegisterServiceProxy implements RegisterService {
 
-    // TODO: Create endpoint and put URL path here
-    static final String URL_PATH = "";
+    private static final String URL_PATH = "/register";
 
-    @Override
     public RegisterResponse register(RegisterRequest request) throws IOException, TweeterRemoteException {
-
-        // TODO: Implement register() in ServerFacade and replace this line
-        RegisterResponse response = new RegisterResponse("Dummy");
-        // RegisterResponse response = getServerFacade().register(request);
+        RegisterResponse response = getServerFacade().register(request, URL_PATH);
 
         if(response.isSuccess()) {
             loadImage(response.getUser());
@@ -39,6 +36,13 @@ public class RegisterServiceProxy implements RegisterService {
         user.setImageBytes(bytes);
     }
 
+    /**
+     * Returns an instance of {@link ServerFacade}. Allows mocking of the ServerFacade class for
+     * testing purposes. All usages of ServerFacade should get their ServerFacade instance from this
+     * method to allow for proper mocking.
+     *
+     * @return the instance.
+     */
     ServerFacade getServerFacade() {
         return new ServerFacade();
     }
