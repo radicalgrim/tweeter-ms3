@@ -15,6 +15,7 @@ public class StatusResponse extends PagedResponse {
     StatusResponse(boolean success, String message, boolean hasMorePages) {
         super(success, message, hasMorePages);
     }
+    //nothing comment
 
     public List<Status> getStatuses() {
         return statuses;
