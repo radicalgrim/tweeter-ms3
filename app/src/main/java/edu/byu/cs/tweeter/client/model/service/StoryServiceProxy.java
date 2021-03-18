@@ -5,20 +5,22 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
 import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.StoryService;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public class StoryServiceProxy implements StoryService {
 
     // TODO: Create endpoint and put URL path here
-    static final String URL_PATH = "";
+    static final String URL_PATH = "/story";
 
     @Override
-    public StoryResponse getStory(StoryRequest request) throws IOException {
+    public StoryResponse getStory(StoryRequest request) throws IOException, TweeterRemoteException {
 
         // TODO: Implement getStory() in ServerFacade and replace this line
-        StoryResponse response = new StoryResponse("Dummy");
+        StoryResponse response = getServerFacade().getStory(request, URL_PATH);
         // StoryResponse response = getServerFacade().getStory(request);
 
         if(response.isSuccess()) {

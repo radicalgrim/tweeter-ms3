@@ -9,17 +9,18 @@ import edu.byu.cs.tweeter.model.service.FeedService;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 
 public class FeedServiceProxy implements FeedService {
 
     // TODO: Create endpoint and put URL path here
-    static final String URL_PATH = "";
+    static final String URL_PATH = "/feed";
 
     @Override
     public FeedResponse getFeed(FeedRequest request) throws IOException, TweeterRemoteException {
 
         // TODO: Implement getFeed() in ServerFacade and replace this line
-        FeedResponse response = new FeedResponse("Dummy");
+        FeedResponse response = getServerFacade().getFeed(request, URL_PATH);
         // FeedResponse response = getServerFacade().getFeed(request, URL_PATH);
 
         if(response.isSuccess()) {

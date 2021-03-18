@@ -3,12 +3,16 @@ package edu.byu.cs.tweeter.client.model.net;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -44,6 +48,24 @@ public class ServerFacade {
     public LoginResponse login(LoginRequest request, String urlPath) throws IOException, TweeterRemoteException {
         LoginResponse response = clientCommunicator.doPost(urlPath, request, null, LoginResponse.class);
         if(response.isSuccess()) {
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+    }
+
+    public FeedResponse getFeed(FeedRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        FeedResponse response = clientCommunicator.doPost(urlPath, request, null, FeedResponse.class);
+        if(response.isSuccess()){
+            return response;
+        } else {
+            throw new RuntimeException(response.getMessage());
+        }
+    }
+
+    public StoryResponse getStory(StoryRequest request, String urlPath) throws IOException, TweeterRemoteException {
+        StoryResponse response = clientCommunicator.doPost(urlPath, request, null, StoryResponse.class);
+        if(response.isSuccess()){
             return response;
         } else {
             throw new RuntimeException(response.getMessage());

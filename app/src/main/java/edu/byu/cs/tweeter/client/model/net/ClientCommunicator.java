@@ -98,7 +98,9 @@ class ClientCommunicator {
                     errorResponse = getErrorResponse(connection);
                     throw new TweeterServerException(errorResponse.errorMessage, errorResponse.errorType, errorResponse.stackTrace);
                 default:
-                    throw new RuntimeException("An unknown error occurred. Response code = " + connection.getResponseCode());
+                    errorResponse = getErrorResponse(connection);
+                    throw new TweeterRemoteException(errorResponse.errorMessage, errorResponse.errorType, errorResponse.stackTrace);
+                    //throw new RuntimeException("An unknown error occurred. Response code = " + connection.getResponseCode());
             }
         } finally {
             if(connection != null) {
