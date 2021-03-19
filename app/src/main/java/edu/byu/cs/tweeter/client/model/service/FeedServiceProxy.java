@@ -19,9 +19,7 @@ public class FeedServiceProxy implements FeedService {
     @Override
     public FeedResponse getFeed(FeedRequest request) throws IOException, TweeterRemoteException {
 
-        // TODO: Implement getFeed() in ServerFacade and replace this line
         FeedResponse response = getServerFacade().getFeed(request, URL_PATH);
-        // FeedResponse response = getServerFacade().getFeed(request, URL_PATH);
 
         if(response.isSuccess()) {
             loadImages(response);

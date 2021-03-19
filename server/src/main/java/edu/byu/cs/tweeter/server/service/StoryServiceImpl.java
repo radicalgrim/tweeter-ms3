@@ -5,7 +5,6 @@ import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 import edu.byu.cs.tweeter.server.dao.StoryDAO;
 
-
 public class StoryServiceImpl implements StoryService {
     @Override
     public StoryResponse getStory(StoryRequest request) {

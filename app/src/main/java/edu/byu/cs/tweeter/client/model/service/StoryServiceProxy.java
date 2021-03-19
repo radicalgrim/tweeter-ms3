@@ -19,9 +19,7 @@ public class StoryServiceProxy implements StoryService {
     @Override
     public StoryResponse getStory(StoryRequest request) throws IOException, TweeterRemoteException {
 
-        // TODO: Implement getStory() in ServerFacade and replace this line
         StoryResponse response = getServerFacade().getStory(request, URL_PATH);
-        // StoryResponse response = getServerFacade().getStory(request);
 
         if(response.isSuccess()) {
             loadImages(response);
