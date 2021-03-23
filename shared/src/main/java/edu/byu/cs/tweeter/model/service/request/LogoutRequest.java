@@ -10,8 +10,7 @@ public class LogoutRequest {
         this.user = user;
     }
 
-    public LogoutRequest() {
-    }
+    public LogoutRequest() {}
 
     public User getUser() {
         return user;

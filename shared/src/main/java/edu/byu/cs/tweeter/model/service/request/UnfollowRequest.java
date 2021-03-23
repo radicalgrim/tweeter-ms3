@@ -10,8 +10,7 @@ public class UnfollowRequest {
         this.user = user;
     }
 
-    public UnfollowRequest() {
-    }
+    public UnfollowRequest() {}
 
     /**
      * Returns the username of the user to be unfollowed  by this request.

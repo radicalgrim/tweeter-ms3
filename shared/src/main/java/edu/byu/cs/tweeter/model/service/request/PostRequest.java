@@ -9,8 +9,7 @@ public class PostRequest {
     }
 
 
-    public PostRequest() {
-    }
+    public PostRequest() {}
 
     public String getBody() {
         return body;

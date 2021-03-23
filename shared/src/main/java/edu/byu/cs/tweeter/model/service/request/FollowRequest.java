@@ -10,8 +10,7 @@ public class FollowRequest {
         this.user = user;
     }
 
-    public FollowRequest() {
-    }
+    public FollowRequest() {}
 
     public User getUser() {
         return user;

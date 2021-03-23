@@ -11,13 +11,13 @@ import edu.byu.cs.tweeter.model.service.response.PostResponse;
 public class PostServiceProxy implements PostService {
 
     // TODO: Create endpoint and put URL path here
-    static final String URL_PATH = "";
+    static final String URL_PATH = "/post";
 
     @Override
     public PostResponse post(PostRequest request) throws IOException, TweeterRemoteException {
 
         // TODO: Implement post() in ServerFacade and replace this line
-        PostResponse response = new PostResponse("Dummy");
+        PostResponse response = getServerFacade().post(request, URL_PATH);
         // PostResponse response = getServerFacade().post(request);
 
         if(response.isSuccess()) { }

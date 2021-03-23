@@ -3,8 +3,10 @@ package edu.byu.cs.tweeter.server.dao;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
 import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
 import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 
 public class UserDAO {
@@ -17,6 +19,11 @@ public class UserDAO {
     public LoginResponse getLoginResponse(LoginRequest request){
         User user = new User("Test", "User", MALE_IMAGE_URL);
         return new LoginResponse(user, new AuthToken());
+    }
+
+    public LogoutResponse getLogoutResponse(LogoutRequest request){
+        User user = new User("Test", "User", MALE_IMAGE_URL);
+        return new LogoutResponse(true);
     }
 
     public RegisterResponse getRegisterResponse(RegisterRequest request){
