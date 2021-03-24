@@ -32,6 +32,10 @@ public class FollowingResponse extends FollowsResponse {
         this.users = users;
     }
 
+    public FollowingResponse(boolean success) {
+        super(success, false);
+    }
+
     @Override
     public boolean equals(Object param) {
         if (this == param) {

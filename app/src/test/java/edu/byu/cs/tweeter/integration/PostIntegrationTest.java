@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.Integration;
+package edu.byu.cs.tweeter.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

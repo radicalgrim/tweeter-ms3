@@ -31,6 +31,10 @@ public class StoryResponse extends StatusResponse {
         this.statuses = statuses;
     }
 
+    public StoryResponse(boolean success) {
+        super(success, false);
+    }
+
     @Override
     public boolean equals(Object param) {
         if (this == param) {

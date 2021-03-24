@@ -16,6 +16,10 @@ public class FollowerResponse extends FollowsResponse {
         this.users = users;
     }
 
+    public FollowerResponse(boolean success) {
+        super(success, false);
+    }
+
     @Override
     public boolean equals(Object param) {
         if (this == param) {

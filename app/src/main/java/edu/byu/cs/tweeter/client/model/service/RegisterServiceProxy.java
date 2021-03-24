@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 
 public class RegisterServiceProxy implements RegisterService {
 
-    private static final String URL_PATH = "/register";
+    public static final String URL_PATH = "/register";
 
     public RegisterResponse register(RegisterRequest request) throws IOException, TweeterRemoteException {
         RegisterResponse response = getServerFacade().register(request, URL_PATH);

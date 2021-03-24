@@ -15,7 +15,7 @@ public class LogoutServiceProxy implements LogoutService {
     // TODO: Create endpoint and put URL path here
     //static final String URL_PATH = "";
 
-    private static final String URL_PATH = "/logout";
+    public static final String URL_PATH = "/logout";
 
     public LogoutResponse logout(LogoutRequest request) throws IOException, TweeterRemoteException {
         LogoutResponse response = getServerFacade().logout(request, URL_PATH);

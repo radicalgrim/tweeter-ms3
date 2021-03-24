@@ -16,6 +16,10 @@ public class FeedResponse extends StatusResponse {
         this.statuses = statuses;
     }
 
+    public FeedResponse(boolean success) {
+        super(success, false);
+    }
+
     @Override
     public boolean equals(Object param) {
         if (this == param) {
