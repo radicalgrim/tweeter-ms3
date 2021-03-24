@@ -9,9 +9,7 @@ import edu.byu.cs.tweeter.server.dao.UnfollowDAO;
 public class UnfollowServiceImpl implements UnfollowService {
     @Override
     public UnfollowResponse unfollow(UnfollowRequest request) {
-        UnfollowDAO uDao = getUnfollowDAO();
-        return uDao.unfollow(request);
-        //return getFollowDAO().follow(followRequest);
+        return getUnfollowDAO().unfollow(request);
     }
 
     UnfollowDAO getUnfollowDAO() { return new UnfollowDAO(); }
