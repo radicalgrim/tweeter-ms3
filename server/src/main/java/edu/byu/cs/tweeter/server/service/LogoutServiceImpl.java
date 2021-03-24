@@ -12,7 +12,10 @@ public class LogoutServiceImpl implements LogoutService {
         // TODO: Generates dummy data. Replace with a real implementation.
 //        User user = new User("Test", "User",
 //                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        UserDAO uDao = new UserDAO();
-            return uDao.getLogoutResponse(request);
+        UserDAO uDao = getUserDAO();
+        return uDao.getLogoutResponse(request);
     }
+
+    UserDAO getUserDAO() { return new UserDAO(); }
+
 }

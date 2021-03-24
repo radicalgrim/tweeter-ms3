@@ -14,7 +14,10 @@ public class RegisterServiceImpl implements RegisterService {
         // TODO: Generates dummy data. Replace with a real implementation.
 //        User user = new User("Test", "User",
 //                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        UserDAO uDao = new UserDAO();
+        UserDAO uDao = getUserDAO();
         return uDao.getRegisterResponse(request);
     }
+
+    UserDAO getUserDAO() { return new UserDAO(); }
+
 }

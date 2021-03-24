@@ -8,10 +8,10 @@ import edu.byu.cs.tweeter.server.dao.FollowDAO;
 public class FollowServiceImpl implements FollowService {
     @Override
     public FollowResponse follow(FollowRequest request) {
-        FollowDAO fDao = new FollowDAO();
+        FollowDAO fDao = getFollowDAO();
         return fDao.follow(request);
         //return getFollowDAO().follow(followRequest);
     }
 
-    //FollowerDAO getFollowDAO() { return new FollowDAO(); }
+    FollowDAO getFollowDAO() { return new FollowDAO(); }
 }
