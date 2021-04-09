@@ -36,7 +36,7 @@ public class UserDAO {
 //        return new LoginResponse(user, new AuthToken());
 
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
+                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
                 .build();
         DynamoDB dynamoDB = new DynamoDB(client);
         Table table = dynamoDB.getTable("User");
@@ -82,7 +82,7 @@ public class UserDAO {
 //        return new RegisterResponse(user, new AuthToken());
 
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
+                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
                 .build(); //WHAT IS THE ENDPOINT URL???
         DynamoDB dynamoDB = new DynamoDB(client);
         Table table = dynamoDB.getTable("User");

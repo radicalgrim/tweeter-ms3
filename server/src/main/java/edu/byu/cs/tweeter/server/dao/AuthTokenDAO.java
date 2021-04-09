@@ -18,23 +18,23 @@ import java.util.Date;
 
 public class AuthTokenDAO {
     AuthToken createAuthToken(String alias){
-        AuthToken token = new AuthToken();
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-2"))
                 .build();
         DynamoDB dynamoDB = new DynamoDB(client);
         Table table = dynamoDB.getTable("AuthToken");
         try {
+            AuthToken auth_token = new AuthToken();
             System.out.println("Adding a new authtoken...");
             long date = 0;
             PutItemOutcome outcome = table
                     //Check that this authtoken doesnt already exist??? it can exist, but not under the same primary key
                     .putItem(new Item().withPrimaryKey("alias", alias)
-                            .withString("auth_token", token.toString())
+                            .withString("auth_token", auth_token.getAuthToken())
                             .withLong("time_stamp", System.currentTimeMillis()));
 
             System.out.println("PutItem succeeded:\n" + outcome.getPutItemResult());
-            return token;
+            return auth_token;
         } catch (Exception e) {
             System.err.println("Unable to add auth token");
             System.err.println(e.getMessage());
