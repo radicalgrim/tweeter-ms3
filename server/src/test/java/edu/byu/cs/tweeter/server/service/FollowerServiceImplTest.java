@@ -12,7 +12,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
-import edu.byu.cs.tweeter.server.dao.FollowerDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 public class FollowerServiceImplTest {
 
@@ -36,11 +36,11 @@ public class FollowerServiceImplTest {
 
         // Setup a mock FollowerDAO that will return known responses
         expectedResponse = new FollowerResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
-        FollowerDAO mockFollowerDAO = Mockito.mock(FollowerDAO.class);
-        Mockito.when(mockFollowerDAO.getFollowers(request)).thenReturn(expectedResponse);
+        FollowDAO mockFollowDAO = Mockito.mock(FollowDAO.class);
+        Mockito.when(mockFollowDAO.getFollowers(request)).thenReturn(expectedResponse);
 
         followerServiceImplSpy = Mockito.spy(FollowerServiceImpl.class);
-        Mockito.when(followerServiceImplSpy.getFollowerDAO()).thenReturn(mockFollowerDAO);
+        Mockito.when(followerServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
     }
 
     @Test

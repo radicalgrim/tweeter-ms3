@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 public class UnfollowDAOTest {
     private UnfollowRequest request;
     private UnfollowResponse expectedResponse;
-    private UnfollowDAO UnfollowDAOSpy;
+    private FollowDAO followDAOSpy;
 
     @BeforeEach
     public void setup() {
@@ -24,8 +24,8 @@ public class UnfollowDAOTest {
 
         // Setup a mock UnfollowDAO that will return known responses
         expectedResponse = new UnfollowResponse(true);
-        UnfollowDAOSpy = Mockito.spy(new UnfollowDAO());
-        Mockito.when(UnfollowDAOSpy.unfollow(request)).thenReturn(expectedResponse);
+        followDAOSpy = Mockito.spy(new FollowDAO());
+        Mockito.when(followDAOSpy.unfollow(request)).thenReturn(expectedResponse);
 
         //PostServiceImplSpy = Mockito.spy(PostServiceImpl.class);
         //Mockito.when(PostServiceImplSpy.getUnfollowDAO()).thenReturn(mockUnfollowDAO);
@@ -35,7 +35,7 @@ public class UnfollowDAOTest {
     void testUnfollow_() {
         //Mockito.when(UserDAOSpy.getLoginResponse(loginRequest)).thenReturn(expectedLoginResponse);
 
-        UnfollowResponse response = UnfollowDAOSpy.unfollow(request);
+        UnfollowResponse response = followDAOSpy.unfollow(request);
 
         Assertions.assertEquals(expectedResponse, response);
     }

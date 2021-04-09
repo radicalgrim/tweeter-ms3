@@ -7,5 +7,4 @@ public class PostDAO {
     public PostResponse post(PostRequest request){
         return new PostResponse();
     }
-
 }

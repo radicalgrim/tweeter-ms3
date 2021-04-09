@@ -10,12 +10,12 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
-import edu.byu.cs.tweeter.server.dao.UnfollowDAO;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 
 public class UnfollowServiceImplTest {
     private UnfollowRequest request;
     private UnfollowResponse expectedResponse;
-    private UnfollowDAO mockUnfollowDAO;
+    private FollowDAO mockFollowDAO;
     private UnfollowServiceImpl UnfollowServiceImplSpy;
 
     @BeforeEach
@@ -26,13 +26,13 @@ public class UnfollowServiceImplTest {
         // Setup a request object to use in the tests
         request = new UnfollowRequest(resultUser1);
 
-        // Setup a mock UnfollowDAO that will return known responses
+        // Setup a mock FollowDAO that will return known responses
         expectedResponse = new UnfollowResponse(true);
-        mockUnfollowDAO = Mockito.mock(UnfollowDAO.class);
-        Mockito.when(mockUnfollowDAO.unfollow(request)).thenReturn(expectedResponse);
+        mockFollowDAO = Mockito.mock(FollowDAO.class);
+        Mockito.when(mockFollowDAO.unfollow(request)).thenReturn(expectedResponse);
 
         UnfollowServiceImplSpy = Mockito.spy(UnfollowServiceImpl.class);
-        Mockito.when(UnfollowServiceImplSpy.getUnfollowDAO()).thenReturn(mockUnfollowDAO);
+        Mockito.when(UnfollowServiceImplSpy.getFollowDAO()).thenReturn(mockFollowDAO);
     }
 
     @Test
