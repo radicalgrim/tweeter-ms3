@@ -30,7 +30,7 @@ public class AuthTokenDAO {
             PutItemOutcome outcome = table
                     //Check that this authtoken doesnt already exist??? it can exist, but not under the same primary key
                     .putItem(new Item().withPrimaryKey("alias", alias)
-                            .withString("auth_token", auth_token.getAuthToken())
+                            .withString("auth_token", auth_token.retrieveStringAuthToken())
                             .withLong("time_stamp", System.currentTimeMillis()));
 
             System.out.println("PutItem succeeded:\n" + outcome.getPutItemResult());

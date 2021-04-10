@@ -30,7 +30,7 @@ public class AuthToken implements Serializable {
         return sb.toString();
     }
 
-    public String getAuthToken(){
+    public String retrieveStringAuthToken(){
         return this.authToken;
     }
     //store a random string

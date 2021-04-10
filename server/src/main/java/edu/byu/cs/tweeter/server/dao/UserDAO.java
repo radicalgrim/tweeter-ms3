@@ -12,6 +12,7 @@ import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
 //package com.amazonaws.codesamples.gsg;
 //
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
@@ -83,15 +84,20 @@ public class UserDAO {
 
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
                 //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
+                .withRegion(Regions.US_EAST_2)
                 .build(); //WHAT IS THE ENDPOINT URL???
         DynamoDB dynamoDB = new DynamoDB(client);
+        System.out.println("Tables: " + client.listTables().toString());
         Table table = dynamoDB.getTable("User");
 //        infoMap.put("follower_count", request.getFollowerCount());
 //        infoMap.put("followee_count", request.getFolloweeCount());
         try {
             //check that alias does not already exist
+            System.out.println("setting spec,  where alias = " + request.getUsername());
             GetItemSpec spec = new GetItemSpec().withPrimaryKey("alias", request.getUsername());
+            System.out.println("checkItem if exists...");
             Item checkIfExists = table.getItem(spec);
+            System.out.println("checkItemIfExists = " + checkIfExists.getString("alias"));
             if(checkIfExists.getString("alias") != null){
                 return new RegisterResponse("register failed, alias already in use.");
             }

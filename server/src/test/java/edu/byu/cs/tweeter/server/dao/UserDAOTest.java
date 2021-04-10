@@ -1,5 +1,16 @@
 package edu.byu.cs.tweeter.server.dao;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
+import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
+import com.amazonaws.services.dynamodbv2.model.KeyType;
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
+import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +38,7 @@ class UserDAOTest {
     private RegisterResponse registerResponse;
     private LogoutRequest logoutRequest;
     private LogoutResponse logoutResponse;
+    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
 
 
     private final User user1 = new User("Daffy", "Duck", "");
@@ -65,11 +77,36 @@ class UserDAOTest {
 
     @Test
     void testRegister_() {
-        Mockito.when(UserDAOSpy.getRegisterResponse(registerRequest)).thenReturn(registerResponse);
+//        Mockito.when(UserDAOSpy.getRegisterResponse(registerRequest)).thenReturn(registerResponse);
+//
+//        RegisterResponse response = UserDAOSpy.getRegisterResponse(registerRequest);
+//
+//        Assertions.assertEquals(registerResponse, response);
 
-        RegisterResponse response = UserDAOSpy.getRegisterResponse(registerRequest);
+        String firstName = "Allen";
+        String lastName = "Anderson";
+        String username = "@allen_anderson";
+        String password = "random_pass1";
+        String imageUrl = MALE_IMAGE_URL;
+        UserDAO uDAO_actual = new UserDAO();
+        RegisterRequest allen_request = new RegisterRequest(firstName, lastName, username, password, imageUrl);
 
-        Assertions.assertEquals(registerResponse, response);
+
+        RegisterResponse allen_response = uDAO_actual.getRegisterResponse(allen_request);
+        Assertions.assertNotNull(allen_response.getUser());
+    }
+
+    @Test
+    void makeTable() throws InterruptedException {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
+                .withRegion(Regions.US_EAST_2)
+                .build(); //WHAT IS THE ENDPOINT URL???
+        DynamoDB dynamoDB = new DynamoDB(client);
+        System.out.println("Tables: " + client.listTables().toString());
+        Table table = dynamoDB.createTable("User", Arrays.asList(new KeySchemaElement("alias", KeyType.HASH)), Arrays.asList(new AttributeDefinition("alias", ScalarAttributeType.S)), new ProvisionedThroughput(10L, 10L));
+        table.waitForActive();
+        System.out.println("table status: " + table.getDescription().getTableStatus());
     }
 
     @Test
