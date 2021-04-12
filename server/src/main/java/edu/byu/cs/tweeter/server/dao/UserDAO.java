@@ -73,8 +73,16 @@ public class UserDAO {
     }
 
     public LogoutResponse getLogoutResponse(LogoutRequest request) {
-        User user = new User("Test", "User", MALE_IMAGE_URL);
-        return new LogoutResponse(true);
+//        User user = new User("Test", "User", MALE_IMAGE_URL);
+//        return new LogoutResponse(true);
+        AuthTokenDAO aDao = new AuthTokenDAO();
+        Boolean response = aDao.destroyAuthToken(request.getUser());
+        if(response){
+            return new LogoutResponse(true);
+        }
+        else {
+            return new LogoutResponse("logout failed");
+        }
     }
 
     public RegisterResponse getRegisterResponse(RegisterRequest request) {
@@ -97,8 +105,8 @@ public class UserDAO {
             GetItemSpec spec = new GetItemSpec().withPrimaryKey("alias", request.getUsername());
             System.out.println("checkItem if exists...");
             Item checkIfExists = table.getItem(spec);
-            System.out.println("checkItemIfExists = " + checkIfExists.getString("alias"));
-            if(checkIfExists.getString("alias") != null){
+            //System.out.println("checkItemIfExists = " + checkIfExists.getString("alias"));
+            if(checkIfExists != null/*checkIfExists.getString("alias") != null*/){
                 return new RegisterResponse("register failed, alias already in use.");
             }
             //add the new user to the table

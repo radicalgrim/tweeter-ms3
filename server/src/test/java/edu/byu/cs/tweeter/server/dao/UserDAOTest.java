@@ -68,11 +68,19 @@ class UserDAOTest {
 
     @Test
     void testLogin_() {
-        Mockito.when(UserDAOSpy.getLoginResponse(loginRequest)).thenReturn(expectedLoginResponse);
+//        Mockito.when(UserDAOSpy.getLoginResponse(loginRequest)).thenReturn(expectedLoginResponse);
+//
+//        LoginResponse response = UserDAOSpy.getLoginResponse(loginRequest);
+//
+//        Assertions.assertEquals(expectedLoginResponse, response);
+        String username = "@allen_anderson";
+        String password = "random_pass1";
+        UserDAO uDAO_actual = new UserDAO();
+        LoginRequest allen_request = new LoginRequest(username, password);
 
-        LoginResponse response = UserDAOSpy.getLoginResponse(loginRequest);
 
-        Assertions.assertEquals(expectedLoginResponse, response);
+        LoginResponse allen_response = uDAO_actual.getLoginResponse(allen_request);
+        Assertions.assertNotNull(allen_response.getUser());
     }
 
     @Test
@@ -96,18 +104,18 @@ class UserDAOTest {
         Assertions.assertNotNull(allen_response.getUser());
     }
 
-    @Test
-    void makeTable() throws InterruptedException {
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
-                .withRegion(Regions.US_EAST_2)
-                .build(); //WHAT IS THE ENDPOINT URL???
-        DynamoDB dynamoDB = new DynamoDB(client);
-        System.out.println("Tables: " + client.listTables().toString());
-        Table table = dynamoDB.createTable("User", Arrays.asList(new KeySchemaElement("alias", KeyType.HASH)), Arrays.asList(new AttributeDefinition("alias", ScalarAttributeType.S)), new ProvisionedThroughput(10L, 10L));
-        table.waitForActive();
-        System.out.println("table status: " + table.getDescription().getTableStatus());
-    }
+//    @Test
+//    void makeUserTable() throws InterruptedException {
+//        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+//                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
+//                .withRegion(Regions.US_EAST_2)
+//                .build(); //WHAT IS THE ENDPOINT URL???
+//        DynamoDB dynamoDB = new DynamoDB(client);
+//        System.out.println("Tables: " + client.listTables().toString());
+//        Table table = dynamoDB.createTable("User", Arrays.asList(new KeySchemaElement("alias", KeyType.HASH)), Arrays.asList(new AttributeDefinition("alias", ScalarAttributeType.S)), new ProvisionedThroughput(10L, 10L));
+//        table.waitForActive();
+//        System.out.println("table status: " + table.getDescription().getTableStatus());
+//    }
 
     @Test
     void testLogout_() {
