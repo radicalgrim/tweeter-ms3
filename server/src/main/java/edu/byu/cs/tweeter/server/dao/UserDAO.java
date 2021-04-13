@@ -32,15 +32,17 @@ public class UserDAO {
     private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
     private final User user2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
 
+    private static final AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
+            .standard()
+            .withRegion("us-east-2")
+            .build();
+    private static final DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
+
     public LoginResponse getLoginResponse(LoginRequest request) {
-        //MILESTON 3 CODE//////////////////
+//        MILESTONE 3 CODE//////////////////
 //        User user = new User("Test", "User", MALE_IMAGE_URL);
 //        return new LoginResponse(user, new AuthToken());
 
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
-                .build();
-        DynamoDB dynamoDB = new DynamoDB(client);
         Table table = dynamoDB.getTable("User");
         String alias = request.getUsername();
         GetItemSpec spec = new GetItemSpec().withPrimaryKey("alias", alias);
@@ -78,12 +80,6 @@ public class UserDAO {
     public LogoutResponse getLogoutResponse(LogoutRequest request) {
 //        User user = new User("Test", "User", MALE_IMAGE_URL);
 //        return new LogoutResponse(true);
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
-                .build();
-        DynamoDB dynamoDB = new DynamoDB(client);
-        Table table = dynamoDB.getTable("User");
-        //String alias = request.getUsername();
 
         AuthTokenDAO aDao = new AuthTokenDAO();
         Boolean response = aDao.destroyAuthToken(request.getUser());
@@ -96,16 +92,11 @@ public class UserDAO {
     }
 
     public RegisterResponse getRegisterResponse(RegisterRequest request) {
-        //MILESTON 3 CODE//////////////////
+//        MILESTONE 3 CODE//////////////////
 //        User user = new User("Test", "User", MALE_IMAGE_URL);
 //        return new RegisterResponse(user, new AuthToken());
 
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("https://45qrwqgumi.execute-api.us-east-2.amazonaws.com/Tweeter", "us-east-2"))
-                .withRegion(Regions.US_EAST_2)
-                .build(); //WHAT IS THE ENDPOINT URL???
-        DynamoDB dynamoDB = new DynamoDB(client);
-        System.out.println("Tables: " + client.listTables().toString());
+        System.out.println("Tables: " + amazonDynamoDB.listTables().toString());
         Table table = dynamoDB.getTable("User");
 //        infoMap.put("follower_count", request.getFollowerCount());
 //        infoMap.put("followee_count", request.getFolloweeCount());
@@ -136,7 +127,7 @@ public class UserDAO {
             User user = new User(request.getFirstName(),
                     request.getLastName(), request.getUsername(),
                     request.getImageUrl());
-            //CREATE NEW AUTHTOKEN ALSO
+            // CREATE NEW AUTHTOKEN ALSO
             AuthTokenDAO atDao = new AuthTokenDAO();
             AuthToken token = atDao.createAuthToken(request.getUsername());
             if(token != null){
@@ -150,6 +141,25 @@ public class UserDAO {
             System.err.println(e.getMessage());
             return new RegisterResponse("register failed");
         }
+    }
+
+    public User getUser(String userAlias) {
+        User user = null;
+
+        Table table = dynamoDB.getTable("User");
+
+        try {
+            GetItemSpec spec = new GetItemSpec().withPrimaryKey("alias", userAlias);
+            Item outcome = table.getItem(spec);
+            user = new User(outcome.getString("first_name"),
+                    outcome.getString("last_name"), outcome.getString("alias"),
+                    outcome.getString("image_url"));
+        } catch (Exception e) {
+            System.err.println("Unable to find user: " + userAlias);
+            System.err.println(e.getMessage());
+        }
+
+        return user;
     }
 
 }
