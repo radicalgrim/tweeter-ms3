@@ -42,10 +42,10 @@ public class RegisterRequest {
         return password;
     }
     public String getFirstName() {
-        return password;
+        return firstName;
     }
     public String getLastName() {
-        return password;
+        return lastName;
     }
     public String getImageUrl() { return  imageUrl; }
 
