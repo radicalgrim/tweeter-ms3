@@ -7,12 +7,15 @@ import java.util.Objects;
  */
 public class Follow {
 
-    private final User follower;
-    private final User followee;
+    private User follower = new User();
+    private User followee = new User();
 
     public Follow(User follower, User followee) {
         this.follower = follower;
         this.followee = followee;
+    }
+
+    public Follow() {
     }
 
     public User getFollower() {

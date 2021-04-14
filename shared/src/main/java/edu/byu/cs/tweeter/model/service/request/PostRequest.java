@@ -38,6 +38,9 @@ public class PostRequest {
         this.status = status;
     }
 
+    public PostRequest() {
+    }
+
     public Status getStatus() {
         return status;
     }

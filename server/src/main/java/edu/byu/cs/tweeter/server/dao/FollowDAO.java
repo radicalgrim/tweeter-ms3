@@ -38,6 +38,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.PostRequest;
 import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
@@ -52,25 +53,36 @@ public class FollowDAO {
     private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
 
     private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-//    private final User user2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
-//    private final User user3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
-//    private final User user4 = new User("Bonnie", "Beatty", FEMALE_IMAGE_URL);
-//    private final User user5 = new User("Chris", "Colston", MALE_IMAGE_URL);
-//    private final User user6 = new User("Cindy", "Coats", FEMALE_IMAGE_URL);
-//    private final User user7 = new User("Dan", "Donaldson", MALE_IMAGE_URL);
-//    private final User user8 = new User("Dee", "Dempsey", FEMALE_IMAGE_URL);
-//    private final User user9 = new User("Elliott", "Enderson", MALE_IMAGE_URL);
-//    private final User user10 = new User("Elizabeth", "Engle", FEMALE_IMAGE_URL);
-//    private final User user11 = new User("Frank", "Frandson", MALE_IMAGE_URL);
-//    private final User user12 = new User("Fran", "Franklin", FEMALE_IMAGE_URL);
-//    private final User user13 = new User("Gary", "Gilbert", MALE_IMAGE_URL);
-//    private final User user14 = new User("Giovanna", "Giles", FEMALE_IMAGE_URL);
-//    private final User user15 = new User("Henry", "Henderson", MALE_IMAGE_URL);
-//    private final User user16 = new User("Helen", "Hopwell", FEMALE_IMAGE_URL);
-//    private final User user17 = new User("Igor", "Isaacson", MALE_IMAGE_URL);
-//    private final User user18 = new User("Isabel", "Isaacson", FEMALE_IMAGE_URL);
-//    private final User user19 = new User("Justin", "Jones", MALE_IMAGE_URL);
-//    private final User user20 = new User("Jill", "Johnson", FEMALE_IMAGE_URL);
+    private final String password1 = "randomPass1";
+    private final User user2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
+    private final String password2 = "randomPass2";
+    private final User user3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
+    private final String password3 = "randomPass3";
+    private final User user4 = new User("Bonnie", "Beatty", FEMALE_IMAGE_URL);
+    private final String password4 = "randomPass4";
+    private final User user5 = new User("Chris", "Colston", MALE_IMAGE_URL);
+    private final String password5 = "randomPass5";
+    private final User user6 = new User("Cindy", "Coats", FEMALE_IMAGE_URL);
+    private final String password6 = "randomPass6";
+    private final User user7 = new User("Dan", "Donaldson", MALE_IMAGE_URL);
+    private final String password7 = "randomPass7";
+    private final User user8 = new User("Dee", "Dempsey", FEMALE_IMAGE_URL);
+    private final String password8 = "randomPass8";
+    private final User user9 = new User("Elliott", "Enderson", MALE_IMAGE_URL);
+    private final String password9 = "randomPass9";
+    private final User user10 = new User("Elizabeth", "Engle", FEMALE_IMAGE_URL);
+    private final String password10 = "randomPass10";
+    private final User user11 = new User("Frank", "Frandson", MALE_IMAGE_URL);
+    private final User user12 = new User("Fran", "Franklin", FEMALE_IMAGE_URL);
+    private final User user13 = new User("Gary", "Gilbert", MALE_IMAGE_URL);
+    private final User user14 = new User("Giovanna", "Giles", FEMALE_IMAGE_URL);
+    private final User user15 = new User("Henry", "Henderson", MALE_IMAGE_URL);
+    private final User user16 = new User("Helen", "Hopwell", FEMALE_IMAGE_URL);
+    private final User user17 = new User("Igor", "Isaacson", MALE_IMAGE_URL);
+    private final User user18 = new User("Isabel", "Isaacson", FEMALE_IMAGE_URL);
+    private final User user19 = new User("Justin", "Jones", MALE_IMAGE_URL);
+    private final User user20 = new User("Jill", "Johnson", FEMALE_IMAGE_URL);
+
 
     private static final String TableName = "follows";
     private static final String IndexName = "follows_index";
@@ -579,4 +591,82 @@ public class FollowDAO {
             //logger.log("Wrote more Users");
         }
     }
+
+    public ArrayList<User> getFollowersByPostRequest(PostRequest request) {
+//        List<User> followers = new ArrayList<>();
+//
+//        Map<String, String> attrNames = new HashMap<>();
+//        attrNames.put("#followee", FolloweeHandleAttr);     // Follower?
+//
+//        Map<String, AttributeValue> attrValues = new HashMap<>();
+//        attrValues.put(":followee", new AttributeValue().withS(request.getFolloweeAlias()));
+//
+//        QueryRequest queryRequest = new QueryRequest()
+//                .withIndexName(IndexName)
+//                //.withTableName(TableName)
+//                .withKeyConditionExpression("#followee = :followee")
+//                .withExpressionAttributeNames(attrNames)
+//                .withExpressionAttributeValues(attrValues)
+//                .withScanIndexForward(true)
+//                .withLimit(request.getLimit());
+//
+//        if (isNonEmptyString(request.getLastFollowerAlias())) {
+//            Map<String, AttributeValue> startKey = new HashMap<>();
+//            startKey.put(FolloweeHandleAttr, new AttributeValue().withS(request.getFolloweeAlias()));       // userAlias
+//            startKey.put(FollowerHandleAttr, new AttributeValue().withS(request.getLastFollowerAlias()));           // timestamp
+//
+//            queryRequest = queryRequest.withExclusiveStartKey(startKey);
+//        }
+//
+//        QueryResult queryResult = amazonDynamoDB.query(queryRequest);
+//        List<Map<String, AttributeValue>> items = queryResult.getItems();
+//        if (items != null) {
+//            for (Map<String, AttributeValue> item : items) {
+//                User user = userDAO.getUser(item.get(FollowerHandleAttr).getS());
+//                followers.add(user);
+//            }
+//        }
+//
+//        boolean hasMorePages = false;
+//        if (queryResult.getLastEvaluatedKey() != null) {
+//            hasMorePages = true;
+//        }
+        ArrayList<User> followers = new ArrayList<>();
+        Index tableIndex = dynamoDB.getTable(TableName).getIndex(IndexName);
+        Map<String, String> nameMap = new HashMap<>();
+        nameMap.put("#ee", FolloweeHandleAttr);
+        // Value that we are searching for
+        Map<String, Object> valueMap = new HashMap<>();
+        valueMap.put(":ee", request.getStatus().getUser().getAlias());
+        QuerySpec querySpec = new QuerySpec()
+                .withKeyConditionExpression("#ee = :ee")
+                .withNameMap(nameMap)
+                .withValueMap(valueMap)
+                .withScanIndexForward(false);
+//
+//        if (isNonEmptyString(request.getLastFollowerAlias())) {
+//            querySpec.withExclusiveStartKey(FolloweeHandleAttr, request.getFolloweeAlias(),
+//                    FollowerHandleAttr, request.getLastFollowerAlias());
+//        }
+        ItemCollection<QueryOutcome> items = null;
+        Iterator<Item> iterator = null;
+        Item item = null;
+        try {
+            items = tableIndex.query(querySpec);
+            iterator = items.iterator();
+            while (iterator.hasNext()) {
+                item = iterator.next();
+                User user = userDAO.getUser(item.getString(FollowerHandleAttr));
+                followers.add(user);
+            }
+        } catch (Exception ignored) { }
+        return followers;
+    }
+
+    List<User> getDummyUsers() {
+        return Arrays.asList(user1, user2, user3, user4, user5, user6, user7,
+                user8, user9, user10, user11, user12, user13, user14, user15, user16, user17, user18,
+                user19, user20);
+    }
+
 }

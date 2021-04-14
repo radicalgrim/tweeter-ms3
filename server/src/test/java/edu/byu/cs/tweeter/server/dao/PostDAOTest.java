@@ -5,30 +5,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.PostRequest;
-import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.PostResponse;
-import edu.byu.cs.tweeter.server.service.PostServiceImpl;
 
 public class PostDAOTest {
     private PostRequest request;
     private PostResponse expectedResponse;
-    private PostDAO PostDAOSpy;
+    private StoryDAO StoryDAOSpy;
+
+    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
 
     @BeforeEach
     public void setup() {
         String newPost = "new fake post, I am a fake";
-        User allen_user = new User("Allen", "Anderson", "@allen_anderson");
-
+        User allen_user = new User("Allen", "Anderson", "@allen_anderson", MALE_IMAGE_URL);
+        Status status = new Status("Test", "@Test", "https://google.com", allen_user);
 
         // Setup a request object to use in the tests
-        request = new PostRequest(newPost, allen_user);
+        request = new PostRequest(status);
 
         // Setup a mock PostDAO that will return known responses
         expectedResponse = new PostResponse();
-        PostDAOSpy = Mockito.spy(new PostDAO());
-        Mockito.when(PostDAOSpy.post(request)).thenReturn(expectedResponse);
+        StoryDAOSpy = Mockito.spy(new StoryDAO());
+        Mockito.when(StoryDAOSpy.post(request)).thenReturn(expectedResponse);
 
         //PostServiceImplSpy = Mockito.spy(PostServiceImpl.class);
         //Mockito.when(PostServiceImplSpy.getPostDAO()).thenReturn(mockPostDAO);
@@ -38,7 +39,7 @@ public class PostDAOTest {
     void testPost_() {
         //Mockito.when(UserDAOSpy.getLoginResponse(loginRequest)).thenReturn(expectedLoginResponse);
 
-        PostResponse response = PostDAOSpy.post(request);
+        PostResponse response = StoryDAOSpy.post(request);
 
         Assertions.assertEquals(response, response);
     }

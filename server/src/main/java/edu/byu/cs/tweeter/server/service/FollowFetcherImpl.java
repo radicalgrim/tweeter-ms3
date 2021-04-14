@@ -17,6 +17,7 @@ import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.PostRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.server.dao.FollowDAO;
 import edu.byu.cs.tweeter.server.lambda.FollowFetcher;
 import edu.byu.cs.tweeter.server.lambda.JobHandler;
 import edu.byu.cs.tweeter.server.misc.Job;
@@ -33,8 +34,10 @@ public class FollowFetcherImpl {
     //contacts the follow dao
     //send results to the job queue
 
-    FollowerResponse getFollowers(PostRequest request){
-        FollowerRequest followerRequest = new FollowerRequest()
+    ArrayList<User> getFollowers(PostRequest request){
+        FollowDAO fDao = new FollowDAO();
+        ArrayList<User> followers = fDao.getFollowersByPostRequest(request);
+        return followers;
     }
 
     public void handleRequest(SQSEvent input, Context context){
@@ -46,25 +49,12 @@ public class FollowFetcherImpl {
             PostRequest p_request = new Gson().fromJson(msg.getBody(), PostRequest.class);//(PostRequest) JsonSerializer.deserialize(messagesFromPostQ.get(0), PostRequest.class);
             Status status = p_request.getStatus();
 //
-            FollowerResponse f_response = getFollowers(p_request);
-            followers = f_response.getUsers();
+            followers = getFollowers(p_request);
             Job job = new Job(status);
             job.setFollowers(followers);
             buildJob(job, followers);
         }
-//        job.setFollowers(FollowResponse.class.getFollowers); //??should this be a data meber of follwerresponse??
-////            @Override
-////            public Void handleRequest(SQSEvent event, Context context) {
-////                for (SQSEvent.SQSMessage msg : event.getRecords()) {
-////                    // TODO:
-////                    // Add code to print message body to the log
-////                }
-////                return null;
-////            }
-//        JobHandler jHandler = new JobHandler();
-//        jHandler.handleJobs();
     }
-
     public void buildJob(Job job, ArrayList<User> followers){
         int numFollowersAdded = 0;
         while(numFollowersAdded < followers.size()){

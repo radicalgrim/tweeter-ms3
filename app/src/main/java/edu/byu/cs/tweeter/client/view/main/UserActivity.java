@@ -122,28 +122,33 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(UserActivity.this, "Posting... ", Toast.LENGTH_LONG).show();
-                        User current_user = new User(user.getFirstName(), user.getLastName(), user.getAlias());
+                        String tweet = body.getText().toString();
+                        User current_user = new User(user.getFirstName(), user.getLastName(), user.getAlias(), user.getImageUrl());
                         //current_user.set
                         current_user.setImageBytes(null);
                         StringBuilder mention = new StringBuilder("");
                         StringBuilder link = new StringBuilder("");
-                        if(body.toString().contains("@")){
+                        if(tweet.contains("@")){
                             //StringBuilder mention = new StringBuilder();
-                            int atIndex = body.toString().indexOf("@");
-                            char charToCheck = body.toString().charAt(atIndex);
-                            while(charToCheck != '\n' || charToCheck != ' '){
+                            int atIndex = tweet.indexOf("@");
+                            char charToCheck = tweet.charAt(atIndex);
+                            while(charToCheck != '\n' && charToCheck != ' '&& atIndex < tweet.length()-1) {
                                 mention.append(charToCheck);
+                                atIndex++;
+                                charToCheck = tweet.charAt(atIndex);
                             }
                         }
-                        if(body.toString().contains("http")){
+                        if(tweet.contains("http")){
                             //StringBuilder mention = new StringBuilder();
-                            int atIndex = body.toString().indexOf("http");
-                            char charToCheck = body.toString().charAt(atIndex);
-                            while(charToCheck != '\n' || charToCheck != ' '){
+                            int atIndex = tweet.indexOf("http");
+                            char charToCheck = tweet.charAt(atIndex);
+                            while(charToCheck != '\n' && charToCheck != ' ' && atIndex < tweet.length()-1){
                                 link.append(charToCheck);
+                                atIndex++;
+                                charToCheck = tweet.charAt(atIndex);
                             }
                         }
-                        Status newStatus = new Status(body.toString(), mention.toString(), link.toString(), current_user);
+                        Status newStatus = new Status(tweet, mention.toString(), link.toString(), current_user);
                         PostRequest postRequest = new PostRequest(newStatus);
                         PostTask postTask = new PostTask(postPresenter, UserActivity.this);
                         postTask.execute(postRequest);
