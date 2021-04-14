@@ -19,14 +19,6 @@ import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public class StoryDAO {
-//    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-//    private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
-//
-//    private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-//    private final String password1 = "randomPass1";
-//    private final Status status1 = new Status("Hello World 1", "@user1", "https://google.com", "Feb. 2, 2021 1:00", user2);
-
-//    private final User testUser = new User("Allen", "Anderson", "@allen_anderson", MALE_IMAGE_URL);
 
     private static final String TableName = "Story";
 
@@ -75,8 +67,15 @@ public class StoryDAO {
                 String message = item.get(MessageAttr).getS();
                 String mention = item.get(MentionAttr).getS();
                 String link = item.get(LinkAttr).getS();
-                statuses.add(new Status(message, mention, link, userDAO.getUser(request.getUserAlias())));
+                String timestamp = item.get(TimeStampAttr).getS();
+                User user = userDAO.getUser(request.getUserAlias());
+                statuses.add(new Status(message, mention, link, timestamp, user));
             }
+        }
+
+        boolean hasMorePages = false;
+        if (queryResult.getLastEvaluatedKey() != null) {
+            hasMorePages = true;
         }
 
 //        Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
@@ -86,18 +85,19 @@ public class StoryDAO {
 
 //        assertValidRequest(request.getLimit(), request.getUserAlias());
 //        List<Status> dummyStatuses = getDummyStory();
+
 //        List<Status> responseStatuses = new ArrayList<>(request.getLimit());
 //        boolean hasMorePages = false;
 //
 //        if (request.getLimit() > 0) {
-//            int statusIndex = getStatusesStartingIndex(request.getLastTimestamp(), dummyStatuses);
-//            for (int limitCount = 0; statusIndex < dummyStatuses.size() && limitCount < request.getLimit(); statusIndex++, limitCount++) {
-//                responseStatuses.add(dummyStatuses.get(statusIndex));
+//            int statusIndex = getStatusesStartingIndex(request.getLastTimestamp(), statuses);
+//            for (int limitCount = 0; statusIndex < statuses.size() && limitCount < request.getLimit(); statusIndex++, limitCount++) {
+//                responseStatuses.add(statuses.get(statusIndex));
 //            }
-//            hasMorePages = statusIndex < dummyStatuses.size();
+//            hasMorePages = statusIndex < statuses.size();
 //        }
 
-        return new StoryResponse(statuses, false);  // FIXME
+        return new StoryResponse(statuses, hasMorePages);  // FIXME: Paginate
     }
 
     private static boolean isNonEmptyString(String value) {
@@ -111,7 +111,7 @@ public class StoryDAO {
 ////            throw new AssertionError();
 //        assert userAlias != null;
 //    }
-//
+
 //    private int getStatusesStartingIndex(String lastStatusTimestamp, List<Status> statuses) {
 //
 //        int statusIndex = 0;
