@@ -12,7 +12,7 @@ public class FollowFetcher implements RequestHandler<SQSEvent, Void> {
     @Override
     public Void handleRequest(SQSEvent sqsEvent, Context context) {
         FollowFetcherImpl followFetcherImpl = new FollowFetcherImpl();
-        followFetcherImpl.handleRequest();
+        followFetcherImpl.handleRequest(sqsEvent, context);
         return null;
     }
 }

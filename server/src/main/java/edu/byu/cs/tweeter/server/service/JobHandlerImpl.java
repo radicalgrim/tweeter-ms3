@@ -55,8 +55,8 @@ public class JobHandlerImpl {
         // Add each user into the TableWriteItems object
         for (User user : users) {
             Item item = new Item()
-                    .withPrimaryKey("associated_user", user.getAlias())
-                    .withNumber("time_stamp", System.currentTimeMillis())
+                    .withPrimaryKey("associated_user", user.getAlias(),
+                            "time_stamp", String.valueOf(System.currentTimeMillis()))
                     .withString("followed_user", status.getUser().getAlias())
                     .withString("link", status.getLink())
                     .withString("mention", status.getMention())

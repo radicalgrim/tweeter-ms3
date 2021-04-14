@@ -14,6 +14,9 @@ public class Job {
         followers = new ArrayList<>();
     }
 
+    public Job() {
+    }
+
     public void addToFollowers(User user){
         getFollowers().add(user);
     }

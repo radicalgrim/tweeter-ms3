@@ -16,7 +16,7 @@ public class JobHandler implements RequestHandler<SQSEvent, Void> {
     @Override
     public Void handleRequest(SQSEvent sqsEvent, Context context) {
         JobHandlerImpl jobHandlerImpl = new JobHandlerImpl();
-        jobHandlerImpl.handleJobs();
+        jobHandlerImpl.handleJobs(sqsEvent, context);
         return null;
     }
 }

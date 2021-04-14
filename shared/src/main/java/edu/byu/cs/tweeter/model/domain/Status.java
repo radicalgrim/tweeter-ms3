@@ -36,6 +36,9 @@ public class Status {
         this.timestamp = timestamp;
     }
 
+    public Status() {
+    }
+
     public String getTimestamp() {
         return timestamp;
     }

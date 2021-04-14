@@ -8,10 +8,7 @@ import com.amazonaws.services.sqs.model.SendMessageResult;
 import edu.byu.cs.tweeter.model.service.PostService;
 import edu.byu.cs.tweeter.model.service.request.PostRequest;
 import edu.byu.cs.tweeter.model.service.response.PostResponse;
-import edu.byu.cs.tweeter.server.dao.FeedDAO;
-import edu.byu.cs.tweeter.server.dao.PostDAO;
 import edu.byu.cs.tweeter.server.dao.StoryDAO;
-import edu.byu.cs.tweeter.server.dao.UserDAO;
 import edu.byu.cs.tweeter.server.misc.JsonSerializer;
 
 public class PostServiceImpl implements PostService {
