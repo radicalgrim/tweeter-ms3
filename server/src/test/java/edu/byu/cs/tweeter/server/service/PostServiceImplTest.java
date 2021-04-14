@@ -23,9 +23,11 @@ public class PostServiceImplTest {
     @BeforeEach
     public void setup() {
         String newPost = "new fake post, I am a fake";
+        User allen_user = new User("Allen", "Anderson", "@allen_anderson");
+
 
         // Setup a request object to use in the tests
-        request = new PostRequest(newPost);
+        request = new PostRequest(newPost, allen_user);
 
         // Setup a mock PostDAO that will return known responses
         expectedResponse = new PostResponse();

@@ -52,7 +52,8 @@ public class UserDAO {
             outcome = table.getItem(spec);
             System.out.println("GetItem succeeded: " + outcome);
             User user = new User(outcome.getString("first_name"),
-                    outcome.getString("last_name"), outcome.getString("alias"),
+                    outcome.getString("last_name"),
+                    outcome.getString("alias"),
                     outcome.getString("image_url"));
             user.setFollowerCount(outcome.getInt("follower_count"));
             user.setFollowingCount(outcome.getInt("followee_count"));//make sure this is in the order the user model expects

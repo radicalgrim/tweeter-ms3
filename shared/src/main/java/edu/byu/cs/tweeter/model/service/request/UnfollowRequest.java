@@ -6,8 +6,19 @@ public class UnfollowRequest {
 
     private User user;
 
-    public UnfollowRequest(User user) {
+    private User currentUser;
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public UnfollowRequest(User user, User currentUser) {
         this.user = user;
+        this.currentUser = currentUser;
     }
 
     public UnfollowRequest() {}

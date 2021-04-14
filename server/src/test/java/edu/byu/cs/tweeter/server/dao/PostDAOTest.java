@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.PostRequest;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.PostResponse;
@@ -18,9 +19,11 @@ public class PostDAOTest {
     @BeforeEach
     public void setup() {
         String newPost = "new fake post, I am a fake";
+        User allen_user = new User("Allen", "Anderson", "@allen_anderson");
+
 
         // Setup a request object to use in the tests
-        request = new PostRequest(newPost);
+        request = new PostRequest(newPost, allen_user);
 
         // Setup a mock PostDAO that will return known responses
         expectedResponse = new PostResponse();

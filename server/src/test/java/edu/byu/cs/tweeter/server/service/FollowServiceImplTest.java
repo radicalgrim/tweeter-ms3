@@ -22,9 +22,11 @@ public class FollowServiceImplTest {
     public void setup() {
         User resultUser1 = new User("FirstName1", "LastName1",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        User allen_user = new User("Allen", "Anderson", "@allen_anderson");
+
 
         // Setup a request object to use in the tests
-        request = new FollowRequest(resultUser1);
+        request = new FollowRequest(resultUser1, allen_user);
 
         // Setup a mock FollowDAO that will return known responses
         expectedResponse = new FollowResponse(true);

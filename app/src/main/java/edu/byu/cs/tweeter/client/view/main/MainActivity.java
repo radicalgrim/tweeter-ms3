@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
     private LogoutPresenter logoutPresenter;
     private static final String LOG_TAG = "MainActivity";
     Dialog newPost;
+    private User user;
     private PostPresenter postPresenter;
 
 
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
         if(user == null) {
             throw new RuntimeException("User not passed to activity");
         }
@@ -102,7 +103,10 @@ public class MainActivity extends AppCompatActivity implements LogoutPresenter.V
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(MainActivity.this, "Posting... ", Toast.LENGTH_LONG).show();
-                        PostRequest postRequest = new PostRequest(body.toString());
+                        User current_user = new User(user.getFirstName(), user.getLastName(), user.getAlias());
+                        //current_user.set
+                        current_user.setImageBytes(null);
+                        PostRequest postRequest = new PostRequest(body.toString(), current_user);
                         PostTask postTask = new PostTask(postPresenter, MainActivity.this);
                         postTask.execute(postRequest);
                         newPost.dismiss();

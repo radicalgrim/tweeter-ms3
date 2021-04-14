@@ -1,23 +1,19 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
-import java.util.Date;
 
 public class AuthTokenDAO {
     AuthToken createAuthToken(String alias){
@@ -44,6 +40,26 @@ public class AuthTokenDAO {
             System.err.println(e.getMessage());
             return null;
         }
+    }
+
+    BigDecimal getAuthTokenTime(String alias){
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+                //.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-2"))
+                .withRegion(Regions.US_EAST_2)
+                .build();
+        DynamoDB dynamoDB = new DynamoDB(client);
+        Table table = dynamoDB.getTable("AuthToken");
+        try {
+            GetItemSpec spec = new GetItemSpec().withPrimaryKey("user_alias", alias);
+            Item outcome = table.getItem(spec);
+            BigDecimal time_stamp = outcome.getNumber("time_stamp"); //is big decimal okay??
+            return time_stamp;
+        } catch (Exception e) {
+            System.err.println("Unable to add auth token");
+            System.err.println(e.getMessage());
+            return null;
+        }
+
     }
 
     Boolean destroyAuthToken(User userToLogout){

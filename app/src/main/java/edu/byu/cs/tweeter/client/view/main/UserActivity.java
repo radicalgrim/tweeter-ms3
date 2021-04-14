@@ -63,6 +63,7 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
     public Button unfollow;
     public Button follow;
     private User clickedUser;
+    private User currentUser;
     Dialog newPost;
     private PostPresenter postPresenter;
 
@@ -78,6 +79,9 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
 
         User user = (User) getIntent().getSerializableExtra(USER_KEY);
         clickedUser = user;
+
+        User current_User = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        currentUser = current_User;
         if(user == null) {
             throw new RuntimeException("User not passed to activity");
         }
@@ -117,7 +121,10 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(UserActivity.this, "Posting... ", Toast.LENGTH_LONG).show();
-                        PostRequest postRequest = new PostRequest(body.toString());
+                        User current_user = new User(user.getFirstName(), user.getLastName(), user.getAlias());
+                        //current_user.set
+                        current_user.setImageBytes(null);
+                        PostRequest postRequest = new PostRequest(body.toString(), currentUser);
                         PostTask postTask = new PostTask(postPresenter, UserActivity.this);
                         postTask.execute(postRequest);
                         newPost.dismiss();
@@ -150,7 +157,7 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
                 Toast.makeText(UserActivity.this, "Unfollowing...", Toast.LENGTH_LONG).show();
 
                 // It doesn't matter what values we put here. We will be logged in with a hard-coded dummy user.
-                UnfollowRequest unfollowRequest = new UnfollowRequest(clickedUser/*"dummyUserName", "dummyPassword"*/);
+                UnfollowRequest unfollowRequest = new UnfollowRequest(clickedUser/*"dummyUserName", "dummyPassword"*/, currentUser);
                 UnfollowTask unfollowTask = new UnfollowTask(unfollowPresenter, UserActivity.this);
                 unfollowTask.execute(unfollowRequest);
             }
@@ -163,7 +170,7 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
                 Toast.makeText(UserActivity.this, "Following...", Toast.LENGTH_LONG).show();
 
                 // It doesn't matter what values we put here. We will be logged in with a hard-coded dummy user.
-                FollowRequest followRequest = new FollowRequest(clickedUser/*"dummyUserName", "dummyPassword"*/);
+                FollowRequest followRequest = new FollowRequest(clickedUser/*"dummyUserName", "dummyPassword"*/, currentUser);
                 FollowTask followTask = new FollowTask(followPresenter, UserActivity.this);
                 followTask.execute(followRequest);
             }

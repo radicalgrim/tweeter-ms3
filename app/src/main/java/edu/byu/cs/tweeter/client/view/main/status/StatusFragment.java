@@ -33,6 +33,7 @@ import edu.byu.cs.tweeter.client.view.util.ImageUtils;
 public abstract class StatusFragment extends Fragment {
 
     protected static final String USER_KEY = "UserKey";
+    public static final String CURRENT_USER_KEY = "CurrentUser";
     //protected static final String CLICKED_USER_KEY = "ClickedUserKey";
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
 
@@ -95,6 +96,7 @@ public abstract class StatusFragment extends Fragment {
                         // AuthToken currentToken = ServerFacade.getUserAuthToken();
 
                         intent.putExtra(UserActivity.USER_KEY, userClicked);
+                        intent.putExtra(UserActivity.CURRENT_USER_KEY, user);
                         intent.putExtra(UserActivity.AUTH_TOKEN_KEY, currentToken);
 
                         startActivity(intent);
@@ -144,6 +146,7 @@ public abstract class StatusFragment extends Fragment {
                     // AuthToken currentToken = ServerFacade.getUserAuthToken();
 
                     intent.putExtra(UserActivity.USER_KEY, userClicked);
+                    intent.putExtra(UserActivity.CURRENT_USER_KEY, user);
                     intent.putExtra(UserActivity.AUTH_TOKEN_KEY, currentToken);
 
                     startActivity(intent);

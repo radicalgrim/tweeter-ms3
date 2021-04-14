@@ -24,6 +24,7 @@ import edu.byu.cs.tweeter.client.view.util.ImageUtils;
 public abstract class FollowsFragment extends Fragment {
 
     protected static final String USER_KEY = "UserKey";
+    public static final String CURRENT_USER_KEY = "CurrentUser";
     protected static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
     protected static final int LOADING_DATA_VIEW = 0;
@@ -70,6 +71,7 @@ public abstract class FollowsFragment extends Fragment {
                         // AuthToken currentToken = ServerFacade.getUserAuthToken();
 
                         intent.putExtra(UserActivity.USER_KEY, userClicked);
+                        intent.putExtra(UserActivity.CURRENT_USER_KEY, user);
                         intent.putExtra(UserActivity.AUTH_TOKEN_KEY, currentToken);
 
                         startActivity(intent);

@@ -1,9 +1,25 @@
 package edu.byu.cs.tweeter.server.dao;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.UpdateItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
@@ -12,6 +28,7 @@ import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 
 
@@ -41,18 +58,182 @@ public class FollowDAO {
     private final User user19 = new User("Justin", "Jones", MALE_IMAGE_URL);
     private final User user20 = new User("Jill", "Johnson", FEMALE_IMAGE_URL);
 
+    private static final AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
+            .standard()
+            .withRegion("us-east-2")
+            .build();
+    private static final DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
+    private static final BigDecimal hour= BigDecimal.valueOf(3600000.0);
+
+
     //FOLLOW DAO ORIGINAL CODE///////////////////////////////////////////////////////////////////////////
     public FollowResponse follow(FollowRequest request){
         //currentUser.incrementFollowingCount();
-        return new FollowResponse(true);
+
+        //get the item in the follows table by looking up current user as primary key and user as secondary key. Update to follows
+        //if not following and increment the following count for user
+        //even if the user already follows the followee
+        Table table = dynamoDB.getTable("follows");
+        Table userTable = dynamoDB.getTable("User");
+        String current_user_alias = request.getCurrentUser().getAlias();
+        String user_to_follow_alias = request.getUser().getAlias();
+        GetItemSpec spec = new GetItemSpec().withPrimaryKey("follower_handle", current_user_alias, "followee_handle", user_to_follow_alias);
+        Item checkIfExists = null;
+        try {
+            System.out.println("Attempting to find the follows instance...");
+            //is there a better way than querying the authTokenTable??
+            if(checkAuthTokenTime(request.getCurrentUser().getAlias()) == false){ //??what should i do here?
+                return new FollowResponse(false, "authToken is no longer valid");
+            }
+            checkIfExists = table.getItem(spec);
+            if(checkIfExists != null){
+                return new FollowResponse(false, "User is already followed");
+            }
+
+            PutItemOutcome outcome = table
+                    .putItem(new PutItemSpec().withItem(new Item().withPrimaryKey("follower_handle", request.getCurrentUser().getAlias(), "followee_handle", request.getUser().getAlias())));
+                            //.withString("followee_handle", request.getUser().getAlias())));
+            System.out.println("PutItem succeeded:\n" + outcome.getPutItemResult());
+            System.out.println("Follow succeeded: " + outcome);
+            //modify follower value for user, following value for current_user in the table??? use update item
+            if(updateUserTableFollow(current_user_alias, user_to_follow_alias) == false){
+                return new FollowResponse(false, "failed to update the follow count in user table");
+            }
+            request.getUser().setFollowerCount(request.getUser().getFollowerCount() + 1);
+            request.getCurrentUser().setFollowingCount(request.getCurrentUser().getFollowingCount() + 1);//make sure this is in the order the user model expects
+            return new FollowResponse(true);
+        } catch (Exception e) {
+            System.err.println("Unable to follow");
+            System.err.println(e.getMessage());
+            return new FollowResponse(false, "failed to follow");
+        }
+    }
+
+    Boolean updateUserTableFollow(String currentUser, String followedUser){
+        //update the followees for the currentUser
+
+        Table table = dynamoDB.getTable("User");
+        //getcurrentuser
+        Item user = table.getItem("alias", currentUser);
+        UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey("alias", currentUser)
+                .withUpdateExpression("set followee_count = :r")
+                .withValueMap(new ValueMap().withNumber(":r", user.getInt("followee_count") + 1));
+                //.withReturnValues(ReturnValue.UPDATED_NEW); //??? what?
+        try {
+            System.out.println("Updating the item...");
+            UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
+            System.out.println("UpdateItem succeeded:\n");
+
+        }
+        catch (Exception e) {
+            System.err.println("Unable to update user table, follow failed");
+            System.err.println(e.getMessage());
+            return false;
+        }
+        //now updatde the followers for the other user
+        Item user_followed = table.getItem("alias", currentUser);
+        UpdateItemSpec updateItemSpec2 = new UpdateItemSpec().withPrimaryKey("alias", followedUser)
+                .withUpdateExpression("set follower_count = :r")
+                .withValueMap(new ValueMap().withNumber(":r", user_followed.getInt("follower_count") + 1));
+        try {
+            System.out.println("Updating the item...");
+            UpdateItemOutcome outcome2 = table.updateItem(updateItemSpec2);
+            System.out.println("UpdateItem succeeded:\n");
+
+        }
+        catch (Exception e) {
+            System.err.println("Unable to update user table, follow failed");
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    Boolean updateUserTableUnfollow(String currentUser, String followedUser){
+        //update the followees for the currentUser
+        Table table = dynamoDB.getTable("User");
+        Item user = table.getItem("alias", currentUser);
+        UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey("alias", currentUser)
+                .withUpdateExpression("set followee_count = :r")
+                .withValueMap(new ValueMap().withNumber(":r", user.getInt("followee_count") - 1));
+        try {
+            System.out.println("Updating the item...");
+            UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
+            System.out.println("UpdateItem succeeded:\n");
+
+        }
+        catch (Exception e) {
+            System.err.println("Unable to update user table, unfollow failed.");
+            System.err.println(e.getMessage());
+            return false;
+        }
+        //now updatde the followers for the other user
+        Item user_unfollowed = table.getItem("alias", currentUser);
+        UpdateItemSpec updateItemSpec2 = new UpdateItemSpec().withPrimaryKey("alias", followedUser)
+                .withUpdateExpression("set follower_count = :r")
+                .withValueMap(new ValueMap().withNumber(":r", user.getInt("follower_count") - 1));
+        try {
+            System.out.println("Updating the item...");
+            UpdateItemOutcome outcome2 = table.updateItem(updateItemSpec2);
+            System.out.println("UpdateItem succeeded:\n");
+
+        }
+        catch (Exception e) {
+            System.err.println("Unable to update user table, unfollow failed");
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    Boolean checkAuthTokenTime(String alias){
+        AuthTokenDAO aDao = new AuthTokenDAO();
+        BigDecimal authTokenTime = aDao.getAuthTokenTime(alias);
+        BigDecimal currentTime = BigDecimal.valueOf(System.currentTimeMillis());
+        if((authTokenTime.subtract(currentTime)).compareTo(hour) > 0){ //??what should i do here?
+            return false;
+        }
+        return true;
     }
 
     //UNFOLLOW DAO ORIGINAL CODE///////////////////////////////////////////////////////////////////////////
     public UnfollowResponse unfollow(UnfollowRequest request){
-        UnfollowResponse response = new UnfollowResponse(true);
-        //currentUser.decrementFollowingCount();
-        //int testVar = currentUser.getFollowingCount();
-        return response;
+//        UnfollowResponse response = new UnfollowResponse(true);
+//        //currentUser.decrementFollowingCount();
+//        //int testVar = currentUser.getFollowingCount();
+//        return response;
+        Table table = dynamoDB.getTable("follows");
+        String current_user_alias = request.getCurrentUser().getAlias();
+        String user_to_unfollow_alias = request.getUser().getAlias();
+        GetItemSpec spec = new GetItemSpec().withPrimaryKey("follower_handle", current_user_alias, "followee_handle", user_to_unfollow_alias);
+        DeleteItemSpec deleteSpec = new DeleteItemSpec().withPrimaryKey("follower_handle", current_user_alias, "followee_handle", user_to_unfollow_alias);
+        Item checkIfExists = null;
+        try {
+            System.out.println("Attempting to find the follows instance...");
+            //is there a better way than querying the authTokenTable??
+            if(checkAuthTokenTime(request.getCurrentUser().getAlias()) == false){ //??what should i do here?
+                return new UnfollowResponse("authToken is no longer valid");
+            }
+            checkIfExists = table.getItem(spec);
+            if(checkIfExists != null){
+                table.deleteItem(deleteSpec);
+                //return new FollowResponse(false, "User is already followed");
+                if(updateUserTableUnfollow(current_user_alias, user_to_unfollow_alias) == false){
+                    return new UnfollowResponse("failed to update the table, unfollow failed.");
+                }
+                System.out.println("DeleteItem succeeded");
+                request.getUser().setFollowerCount(request.getUser().getFollowerCount() + 1);
+                request.getCurrentUser().setFollowingCount(request.getCurrentUser().getFollowingCount() + 1);
+            }
+            else {
+                return new UnfollowResponse("User was already not followed");
+            }
+            return new UnfollowResponse(true);
+        } catch (Exception e) {
+            System.err.println("Unable to follow");
+            System.err.println(e.getMessage());
+            return new UnfollowResponse("failed to unfollow, exception caught");
+        }
     }
 
     //FOLLOWER DAO ORIGINAL CODE///////////////////////////////////////////////////////////////////////////

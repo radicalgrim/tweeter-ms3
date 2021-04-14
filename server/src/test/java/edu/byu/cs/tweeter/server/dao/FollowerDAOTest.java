@@ -26,6 +26,7 @@ class FollowerDAOTest {
 
     private FollowDAO followDAOSpy;
 
+
     @BeforeEach
     void setup() {
         followDAOSpy = Mockito.spy(new FollowDAO());

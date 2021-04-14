@@ -6,8 +6,19 @@ public class FollowRequest {
 
     private User user;
 
-    public FollowRequest(User user) {
+    private User currentUser;
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public FollowRequest(User user, User currentUser) {
         this.user = user;
+        this.currentUser = currentUser;
     }
 
     public FollowRequest() {}
