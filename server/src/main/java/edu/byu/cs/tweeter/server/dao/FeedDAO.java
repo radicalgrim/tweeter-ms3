@@ -8,7 +8,6 @@ import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,16 +15,14 @@ import java.util.Map;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
-import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
-import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 
 public class FeedDAO {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-    private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-    private final Status status1 = new Status("Hello World 1", "@user1", "https://google.com", "Feb. 2, 2021 1:00", user1);
+    private final User dummyUser = new User("Dummy", "Dummy", MALE_IMAGE_URL);
+    //private final Status status1 = new Status("Hello World 1", "@user1", "https://google.com", "Feb. 2, 2021 1:00", dummyUser);
 
     private static final String TableName = "Feed";
 
@@ -48,45 +45,47 @@ public class FeedDAO {
     public FeedResponse getFeed(FeedRequest request) {
         List<Status> statuses = new ArrayList<>();
 
-//        // TODO: Adapt to feed table
-//        Map<String, String> attrNames = new HashMap<>();
-//        attrNames.put("#user", AssociatedUserAttr);
-//
-//        Map<String, AttributeValue> attrValues = new HashMap<>();
-//        attrValues.put(":user", new AttributeValue().withS(request.getUserAlias()));
-//
-//        QueryRequest queryRequest = new QueryRequest()
-//                .withTableName(TableName)
-//                .withKeyConditionExpression("#user = :user")
-//                .withExpressionAttributeNames(attrNames)
-//                .withExpressionAttributeValues(attrValues)
-//                .withLimit(request.getLimit());
-//
-//        if (isNonEmptyString(request.getLastTimestamp())) {
-//            Map<String, AttributeValue> startKey = new HashMap<>();
-//            startKey.put(AssociatedUserAttr, new AttributeValue().withS(request.getUserAlias()));
-//            startKey.put(TimeStampAttr, new AttributeValue().withS(request.getLastTimestamp()));
-//
-//            queryRequest = queryRequest.withExclusiveStartKey(startKey);
-//        }
-//
-//        QueryResult queryResult = amazonDynamoDB.query(queryRequest);
-//        List<Map<String, AttributeValue>> items = queryResult.getItems();
-//        if (items != null) {
-//            for (Map<String, AttributeValue> item : items) {
-//                String message = item.get(MessageAttr).getS();
-//                String mention = item.get(MentionAttr).getS();
-//                String link = item.get(LinkAttr).getS();
-//                String timestamp = item.get(TimeStampAttr).getS();
-//                User user = userDAO.getUser(item.get(FollowedUserAttr).getS());
-//                statuses.add(new Status(message, mention, link, timestamp, user));
-//            }
-//        }
-//
-//        boolean hasMorePages = false;
-//        if (queryResult.getLastEvaluatedKey() != null) {
-//            hasMorePages = true;
-//        }
+        Map<String, String> attrNames = new HashMap<>();
+        attrNames.put("#user", AssociatedUserAttr);
+
+        Map<String, AttributeValue> attrValues = new HashMap<>();
+        attrValues.put(":user", new AttributeValue().withS(request.getUserAlias()));
+
+        QueryRequest queryRequest = new QueryRequest()
+                .withTableName(TableName)
+                .withKeyConditionExpression("#user = :user")
+                .withExpressionAttributeNames(attrNames)
+                .withExpressionAttributeValues(attrValues)
+                .withLimit(request.getLimit());
+
+        if (isNonEmptyString(request.getLastTimestamp())) {
+            Map<String, AttributeValue> startKey = new HashMap<>();
+            startKey.put(AssociatedUserAttr, new AttributeValue().withS(request.getUserAlias()));
+            startKey.put(TimeStampAttr, new AttributeValue().withS(request.getLastTimestamp()));
+
+            queryRequest = queryRequest.withExclusiveStartKey(startKey);
+        }
+
+        QueryResult queryResult = amazonDynamoDB.query(queryRequest);
+        List<Map<String, AttributeValue>> items = queryResult.getItems();
+        if (items != null) {
+            for (Map<String, AttributeValue> item : items) {
+                String message = item.get(MessageAttr).getS();
+                String mention = item.get(MentionAttr).getS();
+                String link = item.get(LinkAttr).getS();
+                String timestamp = item.get(TimeStampAttr).getS();
+                User user = userDAO.getUser(item.get(FollowedUserAttr).getS());
+                if (user == null) {
+                    user = dummyUser;
+                }
+                statuses.add(new Status(message, mention, link, timestamp, user));
+            }
+        }
+
+        boolean hasMorePages = false;
+        if (queryResult.getLastEvaluatedKey() != null) {
+            hasMorePages = true;
+        }
 
 //        Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
 //        if (lastKey != null) {
@@ -107,14 +106,14 @@ public class FeedDAO {
 //            hasMorePages = statusIndex < statuses.size();
 //        }
 
-        boolean hasMorePages = false;
-        statuses.add(status1);
-
         return new FeedResponse(statuses, hasMorePages);  // FIXME: Paginate
     }
 
     private static boolean isNonEmptyString(String value) {
-        return (value != null && value.length() > 0);
+        if (value == null) {
+            return false;
+        }
+        return (value.length() > 0);
     }
 
 //    private void assertValidRequest(int limit, String userAlias) {

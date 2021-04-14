@@ -101,7 +101,10 @@ public class StoryDAO {
     }
 
     private static boolean isNonEmptyString(String value) {
-        return (value != null && value.length() > 0);
+        if (value == null) {
+            return false;
+        }
+        return (value.length() > 0);
     }
 
 //    private void assertValidRequest(int limit, String userAlias) {
