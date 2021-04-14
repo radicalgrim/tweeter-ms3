@@ -78,7 +78,17 @@ public class StoryDAO {
             hasMorePages = true;
         }
 
-//        Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
+        return new StoryResponse(statuses, hasMorePages);
+    }
+
+    private static boolean isNonEmptyString(String value) {
+        if (value == null) {
+            return false;
+        }
+        return (value.length() > 0);
+    }
+
+    //        Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
 //        if (lastKey != null) {
 //            result.setLastKey(lastKey.get(LocationAttr).getS());
 //        }
@@ -96,17 +106,6 @@ public class StoryDAO {
 //            }
 //            hasMorePages = statusIndex < statuses.size();
 //        }
-
-        return new StoryResponse(statuses, hasMorePages);  // FIXME: Paginate
-    }
-
-    private static boolean isNonEmptyString(String value) {
-        if (value == null) {
-            return false;
-        }
-        return (value.length() > 0);
-    }
-
 //    private void assertValidRequest(int limit, String userAlias) {
 //        //Used in place of assert statements because Android does not support them
 //        assert limit >= 0;
