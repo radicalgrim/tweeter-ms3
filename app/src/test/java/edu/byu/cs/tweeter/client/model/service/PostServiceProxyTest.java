@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
@@ -27,8 +28,12 @@ public class PostServiceProxyTest {
     public void setup() throws IOException, TweeterRemoteException {
 
         // Setup request objects to use in the tests
-        validRequest = new PostRequest("real Post");
-        invalidRequest = new PostRequest("Fake Post");
+        User userAllen = new User("Allen", "Anderson", MALE_IMAGE_URL);
+        User fakeUser = new User("fakey", "fakerton", MALE_IMAGE_URL);
+        Status validNewStatus = new Status("real Post", "@realOtherUser", "link", userAllen);
+        Status invalidNewStatus = new Status("fake Post", "@fakeOtherUser", "link", fakeUser);
+        validRequest = new PostRequest(validNewStatus);
+        invalidRequest = new PostRequest(invalidNewStatus);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new PostResponse();

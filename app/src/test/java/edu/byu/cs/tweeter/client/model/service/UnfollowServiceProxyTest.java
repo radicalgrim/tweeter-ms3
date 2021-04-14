@@ -30,8 +30,8 @@ public class UnfollowServiceProxyTest {
         User fakeUser = new User("fakey", "fakerton", MALE_IMAGE_URL);
 
         // Setup request objects to use in the tests
-        validRequest = new UnfollowRequest(userAllen);
-        invalidRequest = new UnfollowRequest(fakeUser);
+        validRequest = new UnfollowRequest(userAllen, fakeUser);
+        invalidRequest = new UnfollowRequest(fakeUser, fakeUser);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new UnfollowResponse(true);

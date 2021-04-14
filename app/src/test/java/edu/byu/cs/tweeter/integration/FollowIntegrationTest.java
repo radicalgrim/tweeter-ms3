@@ -24,7 +24,7 @@ public class FollowIntegrationTest {
         User resultUser1 = new User("FirstName1", "LastName1",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
         // Setup a request object to use in the tests
-        request = new FollowRequest(resultUser1);
+        request = new FollowRequest(resultUser1, resultUser1);
         // Setup a mock FollowDAO that will return known responses
         expectedResponse = new FollowResponse(true);
     }
