@@ -29,14 +29,6 @@ import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 
 public class StoryDAO {
-//    private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-//    private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
-//
-//    private final User user1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-//    private final String password1 = "randomPass1";
-//    private final Status status1 = new Status("Hello World 1", "@user1", "https://google.com", "Feb. 2, 2021 1:00", user2);
-
-//    private final User testUser = new User("Allen", "Anderson", "@allen_anderson", MALE_IMAGE_URL);
 
     private static final String TableName = "Story";
 
@@ -86,29 +78,25 @@ public class StoryDAO {
                 String message = item.get(MessageAttr).getS();
                 String mention = item.get(MentionAttr).getS();
                 String link = item.get(LinkAttr).getS();
-                statuses.add(new Status(message, mention, link, userDAO.getUser(request.getUserAlias())));
+                String timestamp = item.get(TimeStampAttr).getS();
+                User user = userDAO.getUser(request.getUserAlias());
+                statuses.add(new Status(message, mention, link, timestamp, user));
             }
         }
 
-//        Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
-//        if (lastKey != null) {
-//            result.setLastKey(lastKey.get(LocationAttr).getS());
-//        }
+        boolean hasMorePages = false;
+        if (queryResult.getLastEvaluatedKey() != null) {
+            hasMorePages = true;
+        }
 
-//        assertValidRequest(request.getLimit(), request.getUserAlias());
-//        List<Status> dummyStatuses = getDummyStory();
-//        List<Status> responseStatuses = new ArrayList<>(request.getLimit());
-//        boolean hasMorePages = false;
-//
-//        if (request.getLimit() > 0) {
-//            int statusIndex = getStatusesStartingIndex(request.getLastTimestamp(), dummyStatuses);
-//            for (int limitCount = 0; statusIndex < dummyStatuses.size() && limitCount < request.getLimit(); statusIndex++, limitCount++) {
-//                responseStatuses.add(dummyStatuses.get(statusIndex));
-//            }
-//            hasMorePages = statusIndex < dummyStatuses.size();
-//        }
+        return new StoryResponse(statuses, hasMorePages);
+    }
 
-        return new StoryResponse(statuses, false);  // FIXME
+    private static boolean isNonEmptyString(String value) {
+        if (value == null) {
+            return false;
+        }
+        return (value.length() > 0);
     }
 
     private static boolean isNonEmptyString(String value) {
@@ -127,6 +115,28 @@ public class StoryDAO {
             //System.out.println("checkItemIfExists = " + checkIfExists.getString("alias"));
 //            if(checkIfExists != null/*checkIfExists.getString("alias") != null*/){
 //                return new RegisterResponse("register failed, alias already in use.");
+=======
+//    private void assertValidRequest(int limit, String userAlias) {
+//        //Used in place of assert statements because Android does not support them
+//        assert limit >= 0;
+//
+////            throw new AssertionError();
+//        assert userAlias != null;
+//    }
+
+//    private int getStatusesStartingIndex(String lastStatusTimestamp, List<Status> statuses) {
+//
+//        int statusIndex = 0;
+//        if (lastStatusTimestamp != null) {
+//            // This is a paged request for something after the first page. Find the first item
+//            // we should return
+//            for (int i = 0; i < statuses.size(); i++) {
+//                if (lastStatusTimestamp.equals(statuses.get(i).getTimestamp())) {
+//                    // We found the index of the last item returned last time. Increment to get
+//                    // to the first one we should return
+//                    statusIndex = i + 1;
+//                    break;
+//                }
 //            }
             //add the new user to the table
             //System.out.println("Adding a new user...");
