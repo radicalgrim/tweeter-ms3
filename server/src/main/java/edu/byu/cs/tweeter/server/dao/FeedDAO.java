@@ -17,7 +17,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 
-
 public class FeedDAO {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
@@ -34,7 +33,6 @@ public class FeedDAO {
     private static final String LinkAttr = "link";
 
     private static final UserDAO userDAO = new UserDAO();
-    private static final FollowDAO followDAO = new FollowDAO();
 
     private static final AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
             .standard()
@@ -87,6 +85,15 @@ public class FeedDAO {
             hasMorePages = true;
         }
 
+        return new FeedResponse(statuses, hasMorePages);
+    }
+
+    private static boolean isNonEmptyString(String value) {
+        if (value == null) {
+            return false;
+        }
+        return (value.length() > 0);
+    }
 //        Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
 //        if (lastKey != null) {
 //            result.setLastKey(lastKey.get(LocationAttr).getS());
@@ -105,17 +112,6 @@ public class FeedDAO {
 //            }
 //            hasMorePages = statusIndex < statuses.size();
 //        }
-
-        return new FeedResponse(statuses, hasMorePages);  // FIXME: Paginate
-    }
-
-    private static boolean isNonEmptyString(String value) {
-        if (value == null) {
-            return false;
-        }
-        return (value.length() > 0);
-    }
-
 //    private void assertValidRequest(int limit, String userAlias) {
 //        //Used in place of assert statements because Android does not support them
 //        assert limit >= 0;
