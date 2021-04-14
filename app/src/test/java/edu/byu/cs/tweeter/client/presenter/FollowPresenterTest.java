@@ -24,11 +24,11 @@ public class FollowPresenterTest {
     public void setup() throws IOException {
         User userAllen = new User("Allen", "Anderson", MALE_IMAGE_URL);
 
-        request = new FollowRequest(userAllen);
+        request = new FollowRequest(userAllen, userAllen);
         response = new FollowResponse(true);
 
         User fakeUser = new User("Mr", "FakeBoi", MALE_IMAGE_URL);
-        FollowRequest failRequest = new FollowRequest(fakeUser);
+        FollowRequest failRequest = new FollowRequest(fakeUser, fakeUser);
         FollowResponse failResponse = new FollowResponse(false, "couldn't follow the user");
 
         mockFollowService = Mockito.mock(FollowService.class);

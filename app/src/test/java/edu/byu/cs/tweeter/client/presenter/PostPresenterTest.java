@@ -7,6 +7,8 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.service.PostService;
 import edu.byu.cs.tweeter.model.service.request.PostRequest;
@@ -23,11 +25,15 @@ public class PostPresenterTest {
     public void setup() throws IOException {
         String post = "A real post";
         String fakePost = "A fake post";
+        User userAllen = new User("Allen", "Anderson", MALE_IMAGE_URL);
+        User fakeUser = new User("fakey", "fakerton", MALE_IMAGE_URL);
+        Status validNewStatus = new Status("real Post", "@realOtherUser", "link", userAllen);
+        Status invalidNewStatus = new Status("fake Post", "@fakeOtherUser", "link", fakeUser);
 
-        request = new PostRequest(post);
+        request = new PostRequest(validNewStatus);
         response = new PostResponse();
 
-        PostRequest failRequest = new PostRequest(fakePost);
+        PostRequest failRequest = new PostRequest(invalidNewStatus);
         PostResponse failResponse = new PostResponse("couldn't post");
 
         mockPostService = Mockito.mock(PostService.class);

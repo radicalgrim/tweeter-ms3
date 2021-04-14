@@ -23,6 +23,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
@@ -124,7 +125,26 @@ public class UserActivity extends AppCompatActivity implements LogoutPresenter.V
                         User current_user = new User(user.getFirstName(), user.getLastName(), user.getAlias());
                         //current_user.set
                         current_user.setImageBytes(null);
-                        PostRequest postRequest = new PostRequest(body.toString(), currentUser);
+                        StringBuilder mention = new StringBuilder("");
+                        StringBuilder link = new StringBuilder("");
+                        if(body.toString().contains("@")){
+                            //StringBuilder mention = new StringBuilder();
+                            int atIndex = body.toString().indexOf("@");
+                            char charToCheck = body.toString().charAt(atIndex);
+                            while(charToCheck != '\n' || charToCheck != ' '){
+                                mention.append(charToCheck);
+                            }
+                        }
+                        if(body.toString().contains("http")){
+                            //StringBuilder mention = new StringBuilder();
+                            int atIndex = body.toString().indexOf("http");
+                            char charToCheck = body.toString().charAt(atIndex);
+                            while(charToCheck != '\n' || charToCheck != ' '){
+                                link.append(charToCheck);
+                            }
+                        }
+                        Status newStatus = new Status(body.toString(), mention.toString(), link.toString(), current_user);
+                        PostRequest postRequest = new PostRequest(newStatus);
                         PostTask postTask = new PostTask(postPresenter, UserActivity.this);
                         postTask.execute(postRequest);
                         newPost.dismiss();

@@ -24,11 +24,11 @@ public class UnfollowPresenterTest {
     public void setup() throws IOException {
         User userAllen = new User("Allen", "Anderson", MALE_IMAGE_URL);
 
-        request = new UnfollowRequest(userAllen);
+        request = new UnfollowRequest(userAllen, userAllen);
         response = new UnfollowResponse(true);
 
         User fakeUser = new User("Mr", "FakeBoi", MALE_IMAGE_URL);
-        UnfollowRequest failRequest = new UnfollowRequest(fakeUser);
+        UnfollowRequest failRequest = new UnfollowRequest(fakeUser, fakeUser);
         UnfollowResponse failResponse = new UnfollowResponse("couldn't unfollow the user");
 
         mockUnfollowService = Mockito.mock(UnfollowService.class);

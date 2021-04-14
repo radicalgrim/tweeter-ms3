@@ -30,8 +30,8 @@ public class FollowServiceProxyTest {
         User fakeUser = new User("fakey", "fakerton", MALE_IMAGE_URL);
 
         // Setup request objects to use in the tests
-        validRequest = new FollowRequest(userAllen);
-        invalidRequest = new FollowRequest(fakeUser);
+        validRequest = new FollowRequest(userAllen, fakeUser);
+        invalidRequest = new FollowRequest(fakeUser, fakeUser);
 
         // Setup a mock ServerFacade that will return known responses
         successResponse = new FollowResponse(true);
